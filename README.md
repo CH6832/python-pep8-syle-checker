@@ -57,4 +57,4 @@ python main.py "tests\\download_raw_bb.py" "tests\\test_script.py"
 
 ## :bookmark: License
 
-[MIT License](https://opensource.org/license/mit) :copyright: 2024 Christoph Hartleb
+This project is licensed under the terms of the [MIT License](LICENSE).
