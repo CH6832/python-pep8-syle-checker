@@ -43,8 +43,7 @@ def main(*args):
         # logging.error('This is an error message')
         # logging.critical('This is a critical message')
 
-
-        print()
+        # print()
 
         # check if the filepath is valid and the file exists
         if os.path.isfile(filepath):
@@ -80,52 +79,32 @@ def main(*args):
             else:
                 print(" "*4 + "Shebang line - FALSE")
 
-            # check for encoding in second line of python file
-            encodings = ["utf-8","utf-16","utf-32","ascii","iso-8859-1","cp1252","cp437","euc-jp","shift-jis"]
-            for encoding in encodings:
-                if pyfile_to_check.has_encoding_declaration(encoding, pyfile_src_code):
-                    print(" "*4 + "Encoding - TRUE")
-                    break
+            # Create an instance of the class
+            # my_instance = MyClass()
+
+            # Get all methods defined within the class
+            methods = [method for method_name, method in inspect.getmembers(pyfile_to_check, predicate=inspect.ismethod)]
+
+            # Call the methods one after another with an argument
+            arg_value = "example_argument"
+            for method in methods:
+                if "has_encoding_declaration" in method.__name__:
+                    encodings = ["utf-8","utf-16","utf-32","ascii","iso-8859-1","cp1252","cp437","euc-jp","shift-jis"]
+                    for encoding in encodings:
+                        if method(encoding, pyfile_src_code):
+                            print(" "*4 + "Encoding - TRUE")
+                            break
+                        else:
+                            print(" "*4 + "Encoding - FALSE")
+
+                elif "has_function_docstring" in method.__name__ or "has_function_docstring" in method.__name__ or "check_return_type_hints" in method.__name__:
+                    tree = ast.parse(pyfile_src_code)
+                    for node in ast.walk(tree):
+                        if isinstance(node, ast.FunctionDef) or isinstance(node, ast.AsyncFunctionDef):
+                            method(node)
+                            method(node)
                 else:
-                    print(" "*4 + "Encoding - FALSE")
-            
-            # check if a python script contains classes. If it
-            # does not, then file is considered a 'module'.
-            if pyfile_to_check.has_module_docstring(pyfile_src_code):
-                print(" "*4 + "File has module docstring - TRUE")
-            else:
-                print(" "*4 + "File has module docstring - FALSE")
-
-            # check if a file has imports
-            if pyfile_to_check.has_imports(pyfile_src_code):
-                print(" "*4 + "File has imports - TRUE")
-            else:
-                print(" "*4 + "File has imports - FALSE")
-
-            tree = ast.parse(pyfile_src_code)
-            for node in ast.walk(tree):
-                if isinstance(node, ast.FunctionDef) or isinstance(node, ast.AsyncFunctionDef):
-                    pyfile_to_check.has_function_docstring(node)
-                    pyfile_to_check.check_return_type_hints(node)
-
-            # check the style of the names
-            print(pyfile_to_check.check_names(pyfile_src_code))
-
-            #check the line length
-            print(pyfile_to_check.check_line_length(pyfile_src_code))
-
-            # check whitespaces before paranthesis
-            print(pyfile_to_check.check_whitespace_before_parentheses(pyfile_src_code))
-
-            # check the whitespaces around the assignments
-            print(pyfile_to_check.check_whitespace_around_assignment(pyfile_src_code))
-
-            # check if the script has a main block
-            print(pyfile_to_check.has_main_block(pyfile_src_code))
-
-            # check for the correct indentation style
-            print(pyfile_to_check.check_indentation_style(pyfile_src_code))
-
+                    method(pyfile_src_code)
 
 if __name__ == "__main__":
     main(*sys.argv[1:])

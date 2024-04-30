@@ -102,30 +102,30 @@ class PEPChecker:
         return "No imports found"
 
 
-    def extract_functions(self) -> None:
-        """Extract all function definitions from a Python script."""
-        file = open(self.filepath_to_py_script, "r")
-        tree = ast.parse(file.read(), filename=self.filepath_to_py_script)
-        # with open(self.filepath_to_py_script, "r") as file:
-        #    tree = ast.parse(file.read(), filename=self.filepath_to_py_script)
+    # def extract_functions(self) -> None:
+    #     """Extract all function definitions from a Python script."""
+    #     file = open(self.filepath_to_py_script, "r")
+    #     tree = ast.parse(file.read(), filename=self.filepath_to_py_script)
+    #     # with open(self.filepath_to_py_script, "r") as file:
+    #     #    tree = ast.parse(file.read(), filename=self.filepath_to_py_script)
             
-        for node in ast.walk(tree):
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                function_info = {
-                    'name': node.name,
-                    'parameters': [arg.arg for arg in node.args.args],
-                    'type_hints': {},
-                    'body': ast.get_source_segment(file.readlines(), node.body)
-                }
+    #     for node in ast.walk(tree):
+    #         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+    #             function_info = {
+    #                 'name': node.name,
+    #                 'parameters': [arg.arg for arg in node.args.args],
+    #                 'type_hints': {},
+    #                 'body': ast.get_source_segment(file.readlines(), node.body)
+    #             }
 
-                # Extract type hints
-                for arg in node.args.args:
-                    if arg.annotation:
-                        function_info['type_hints'][arg.arg] = ast.get_source_segment(file.readlines(), arg.annotation)
+    #             # Extract type hints
+    #             for arg in node.args.args:
+    #                 if arg.annotation:
+    #                     function_info['type_hints'][arg.arg] = ast.get_source_segment(file.readlines(), arg.annotation)
 
-                print(function_info)
+    #             print(function_info)
 
-        return None
+    #     return None
 
 
     def has_function_docstring(self, node) -> None:
