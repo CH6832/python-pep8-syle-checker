@@ -24,7 +24,6 @@ class Shape:
         self.name = name
 
     def area(self):
-        """Calculate the area of the shape."""
         pass  # Placeholder implementation
 
 if __name__ == "__main__":

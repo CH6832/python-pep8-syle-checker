@@ -12,8 +12,10 @@ Driving code to check the python scripts.
 # pylint: disable=line-too-long, trailing-whitespace, multiple-statements, fixme, locally-disabled
 
 
+import ast
 import logging
 import sys
+import inspect
 import os
 from PEPChecker import PEPChecker
 
@@ -100,25 +102,11 @@ def main(*args):
             else:
                 print(" "*4 + "File has imports - FALSE")
 
-            # TODO: Everything from here downwards:
-            # check if every function has a docstring
-            # pyfile_to_check.extract_functions()
-            # extracted_functions = pyfile_to_check.extract_functions()
-            # print(extracted_functions)
-            
-            # example_node = ast.parse(f"def {}({}):\n    pass").body[0]
-            # if pyfile_to_check.has_function_docstring(example_node):
-            #     print("TRUE")
-            # else:
-            #     print("FALSE")
-
-            # tree = ast.parse(pyfile_src_code)
-
-            # for node in ast.walk(tree):
-            #     if isinstance(node, ast.FunctionDef) or isinstance(node, ast.AsyncFunctionDef):
-            #         ...
-            #         # check_docstring(node)
-            #         # check_type_hint(node)
+            tree = ast.parse(pyfile_src_code)
+            for node in ast.walk(tree):
+                if isinstance(node, ast.FunctionDef) or isinstance(node, ast.AsyncFunctionDef):
+                    pyfile_to_check.has_function_docstring(node)
+                    pyfile_to_check.check_return_type_hints(node)
 
             # check the style of the names
             print(pyfile_to_check.check_names(pyfile_src_code))
@@ -129,9 +117,8 @@ def main(*args):
             # check whitespaces before paranthesis
             print(pyfile_to_check.check_whitespace_before_parentheses(pyfile_src_code))
 
-
             # check the whitespaces around the assignments
-            # print(pyfile_to_check.check_whitespace_around_assignment(pyfile_src_code))
+            print(pyfile_to_check.check_whitespace_around_assignment(pyfile_src_code))
 
             # check if the script has a main block
             print(pyfile_to_check.has_main_block(pyfile_src_code))
@@ -141,5 +128,4 @@ def main(*args):
 
 
 if __name__ == "__main__":
-
     main(*sys.argv[1:])

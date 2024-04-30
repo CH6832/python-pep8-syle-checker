@@ -39,11 +39,11 @@ class PEPChecker:
         Keyword arguments:
         source_code -- Python source code in plain text.
         """
-        lines: List[str] = source_code.split("\n")
+        lines = source_code.split("\n")
         if not lines[0].startswith("#!"):
-            return False
+            print("The script is missing a shebang line.")
         else:
-            return True
+            print("The script starts with a shebang line.")
 
 
     def has_encoding_declaration(self, encoding: str, source_code: str) -> bool:
@@ -64,11 +64,11 @@ class PEPChecker:
         # -*- coding: euc-jp -*-
         # -*- coding: shift-jis -*-
         """
-        lines: List[str] = source_code.split("\n")
-        if not encoding in lines[1]:
-            return False
+        lines = source_code.split("\n")
+        if encoding in lines[0]:
+            print(f"The script contains the encoding declaration for '{encoding}'.")
         else:
-            return True
+            print(f"The script is missing the encoding declaration for '{encoding}'.")
 
 
     def has_module_docstring(self, source_code: str) -> bool:
@@ -76,18 +76,15 @@ class PEPChecker:
         
         Keyword arguments:
         source_code -- Python source code in plain text.
-
-        TODO: Function not working correct. Pls fix
         """
-        # lines: List[str] = source_code.split("\n")
-        # for line in lines:
-        #     line = line.strip()
-        #     # docstrings should start with """ but it can be ''' as well
-        #     if line.startswith('"""') or line.startswith("'''"):
-        #         return True
-        #     else:
-        #         return False
-        return any(line.strip().startswith('"""') or line.strip().startswith("'''") for line in source_code.split("\n"))
+        lines = source_code.split("\n")
+        for line in lines:
+            line = line.strip()
+            # Docstrings should start with """ or '''.
+            if line.startswith('"""') or line.startswith("'''"):
+                print("The module contains a docstring.")
+                return
+        print("The module is missing a docstring.")
 
 
     def has_imports(self, source_code: str) -> bool:
@@ -96,11 +93,13 @@ class PEPChecker:
         Keyword arguments:
         file_path -- The path to the Python file.
         """
-        lines: List[str] = source_code.split("\n")
+        lines = source_code.split("\n")
         for line in lines:
             if line.strip().startswith("import ") or line.strip().startswith("from "):
-                return True
-        return False
+                print("The file contains import statements.")
+                return "Imports found"
+        print("The file does not contain import statements.")
+        return "No imports found"
 
 
     def extract_functions(self) -> None:
@@ -133,23 +132,27 @@ class PEPChecker:
         """Check if a node has a docstring."""
         if isinstance(node, ast.FunctionDef) or isinstance(node, ast.AsyncFunctionDef):
             if not (node.body and isinstance(node.body[0], ast.Expr) and isinstance(node.body[0].value, ast.Str)):
-                print(f"Function '{node.name}' is missing a docstring.")
+                print(f"    Function '{node.name}' is missing a docstring.")
         return None
 
 
-    # TODO:
-    # def check_type_hints(self, node):
-    #     """Check if all variables and arguments in a node are type hinted."""
-    #     for arg in node.args.args:
-    #         if not arg.annotation:
-    #             print(f"Argument '{arg.arg}' in function '{node.name}' is missing type hint.")
+    def check_return_type_hints(self, node):
+        """Check if all variables and arguments in a node are type hinted."""
+        # Check arguments
+        for arg in node.args.args:
+            if not arg.annotation:
+                print(f"    Argument '{arg.arg}' in function '{node.name}' is missing type hint.")
         
-    #     for var in node.body:
-    #         if isinstance(var, ast.Assign):
-    #             for target in var.targets:
-    #                 if isinstance(target, ast.Name) and not target.annotation:
-    #                     print(f"Variable '{target.id}' in function '{node.name}' is missing type hint.")
-
+        # Check variables in function body
+        for var in node.body:
+            if isinstance(var, ast.Assign):
+                for target in var.targets:
+                    if isinstance(target, ast.Name) and not target.annotation:
+                        print(f"     Variable '{target.id}' in function '{node.name}' is missing type hint.")
+        
+        # Check return type hint
+        if hasattr(node, 'returns') and not node.returns:
+            print(f"    Function '{node.name}' is missing return type hint.")
 
 
     def check_names(self, source_code):
@@ -158,15 +161,22 @@ class PEPChecker:
         for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef):
                 if not re.match(r'^[a-z_][a-z0-9_]*$', node.name):
-                    print(f"Function name '{node.name}' does not follow the style 'function_name'.")
+                    print(f"    Function name '{node.name}' does not follow the style 'function_name'.")
+                else:
+                    print(f"    Function name '{node.name}' does follow the style 'function_name'.")
             elif isinstance(node, ast.Assign):
                 for target in node.targets:
                     if isinstance(target, ast.Name):
                         if not re.match(r'^[a-z_][a-z0-9_]*$', target.id):
-                            print(f"Variable name '{target.id}' does not follow the style 'variable_name'.")
+                            print(f"    Variable name '{target.id}' does not follow the style 'variable_name'.")
+                        else:
+                            print(f"    Variable name '{target.id}' does follow the style 'variable_name'.")
+
             elif isinstance(node, ast.ClassDef):
                 if not re.match(r'^[A-Z][a-zA-Z0-9]*$', node.name):
-                    print(f"Class name '{node.name}' does not follow the camel case style.")
+                    print(f"    Class name '{node.name}' does not follow the camel case style.")
+                else:
+                    print(f"    Class name '{node.name}' follow the camel case style.")
 
 
     def check_line_length(self, source_code):
@@ -174,7 +184,9 @@ class PEPChecker:
         lines = source_code.split("\n")
         for i, line in enumerate(lines):
             if len(line) > 79:
-                print(f"Line {i+1} is longer than 79 characters.")
+                print(f"     Line {i+1} is longer than 79 characters.")
+            else:
+                print(f"     Line {i+1} is okay.")
 
 
     def check_whitespace_before_parentheses(self, source_code):
@@ -182,42 +194,47 @@ class PEPChecker:
         lines = source_code.split("\n")
         for i, line in enumerate(lines):
             if re.search(r'\(\s', line):
-                print(f"Whitespace before opening parenthesis on line {i+1}")
+                print(f"    Whitespace before opening parenthesis on line {i+1}")
+            else:
+                print(f"    No whitespace before opening parenthesis on line {i+1}")
 
 
-    # TODO:
-    # def check_whitespace_around_assignment(self, source_code):
-    #     """Check if there is only a single whitespace before and after a '=' symbol,
-    #     except for keyword arguments and default values for unannotated function parameters."""
-    #     tree = ast.parse(source_code)
-    #     for node in ast.walk(tree):
-    #         if isinstance(node, ast.FunctionDef):
-    #             # Get default values for function parameters
-    #             defaults = [arg.default for arg in node.args.args]
-    #             for i, arg in enumerate(node.args.args):
-    #                 if isinstance(defaults[i], ast.NameConstant) and defaults[i].value is None:
-    #                     # If the default value is None (indicating no default value)
-    #                     # and the argument is not type annotated, continue to the next argument
-    #                     continue
-    #                 if not isinstance(defaults[i], ast.NameConstant) and arg.annotation is None:
-    #                     # If the default value is not a name constant (indicating a non-None default value)
-    #                     # and the argument is not type annotated, continue to the next argument
-    #                     continue
-    #                 if arg.annotation is not None:
-    #                     # If the argument is type annotated, we should allow whitespace around '=' symbol
-    #                     continue
-    #                 # Otherwise, check for whitespace around '=' symbol
-    #                 line_num = node.lineno
-    #                 for child_node in ast.walk(node):
-    #                     if isinstance(child_node, ast.Assign) and child_node.lineno == line_num:
-    #                         for target in child_node.targets:
-    #                             if isinstance(target, ast.Name) and target.id == arg.arg:
-    #                                 # We found the assignment of the parameter's default value
-    #                                 line = source_code.split("\n")[line_num - 1]
-    #                                 if re.search(r'\s+=\s+', line):
-    #                                     print(f"Additional whitespace around '=' symbol for default value of parameter '{arg.arg}' on line {line_num}")
-    #                                 break
+    def check_whitespace_around_assignment(self, source_code):
+        """Check if there is only a single whitespace before and after a '=' symbol,
+        except for keyword arguments and default values for unannotated function parameters."""
+        tree = ast.parse(source_code)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef):
+                # Get default values for function parameters
+                defaults = [arg.default for arg in node.args.defaults]
+                for i, arg in enumerate(node.args.args):
+                    if i < len(defaults):
+                        default_value = defaults[i]
+                    else:
+                        default_value = None
 
+                    if default_value is not None:
+                        if isinstance(default_value, ast.NameConstant) and default_value.value is None:
+                            continue
+                        if not isinstance(default_value, ast.NameConstant) and arg.annotation is None:
+                            continue
+                    else:
+                        continue
+
+                    if arg.annotation is not None:
+                        continue
+
+                    line_num = node.lineno
+                    for child_node in ast.walk(node):
+                        if isinstance(child_node, ast.Assign) and child_node.lineno == line_num:
+                            for target in child_node.targets:
+                                if isinstance(target, ast.Name) and target.id == arg.arg:
+                                    line = source_code.split("\n")[line_num - 1]
+                                    if re.search(r'\s+=\s+', line):
+                                        print(f"    Additional whitespace around '=' symbol for default value of parameter '{arg.arg}' on line {line_num}")
+                                    else:
+                                        print(f"    No additional whitespace around '=' symbol for default value of parameter '{arg.arg}' on line {line_num}")
+                                    break
 
 
     def has_main_block(self, source_code) -> None:
@@ -237,7 +254,9 @@ class PEPChecker:
                     break
         
         if not main_block_found:
-            print("Missing 'if __name__ == \"__main__\":' block in the script.")
+            print("    Missing 'if __name__ == \"__main__\":' block in the script.")
+        else:
+            print("    'if __name__ == \"__main__\":' block in the script.")
 
 
     def check_indentation_style(self, source_code):
@@ -246,4 +265,6 @@ class PEPChecker:
         for i, line in enumerate(lines):
             num_spaces = len(line) - len(line.lstrip())
             if num_spaces % 4 != 0:
-                print(f"Incorrect indentation at line {i+1}: {num_spaces} spaces instead of a multiple of 4.")
+                print(f"    Incorrect indentation at line {i+1}: {num_spaces} spaces instead of a multiple of 4.")
+            else:
+                print(f"    Correct indentation at line {i+1}: {num_spaces} spaces instead of a multiple of 4.")
