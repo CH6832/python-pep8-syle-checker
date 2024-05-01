@@ -52,7 +52,7 @@ pip3 install -r requirements.txt
 4. Run script to see how it works:
 
 ```
-python main.py "tests\\download_raw_bb.py" "tests\\test_script.py"
+python main.py "tests\\test_script.py"
 ```
 
 5. Output can be found in `logs\` folder. Here an example output:
