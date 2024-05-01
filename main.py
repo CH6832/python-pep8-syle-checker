@@ -21,90 +21,68 @@ from PEPChecker import PEPChecker
 
 
 def main(*args):
-    """main program
-    
-    TODO: Add logging, profiling, optimiatzation, tests
-    """
+    """main program"""
 
-    # check if arguments provided
     if not args:
-        print("No arguments provided.")
+        print("No arguments provided!")
         return 1
 
     for filepath in args:
-        
-        # TODO:
-        # Configure logging
-        logging.basicConfig(filename=f"logs/{os.path.basename(filepath)}.log".replace(".py",""), level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-        # # Log some messages
-        # logging.debug('This is a debug message')    # Won't be shown by default because the logging level is set to INFO
-        # logging.info('This is an informational message')
-        # logging.warning('This is a warning message')
-        # logging.error('This is an error message')
-        # logging.critical('This is a critical message')
 
-        # print()
+        with open(f'logs/' + os.path.basename(filepath.replace(".py","")) + '_analyzation_result.txt', 'w', encoding="utf-8") as f:
+            
+            original_stdout = sys.stdout
 
-        # check if the filepath is valid and the file exists
-        if os.path.isfile(filepath):
-            logging.info(f"{filepath} exists as a file.")
-        else:
-            logging.info(f"{filepath} does not exist as a file.")
-            sys.exit(1)
-        
-        print()
+            sys.stdout = f            
 
-        # check if file is a .py script
-        if filepath.endswith(".py"):
-            logging.info(f"'{filepath}' is a .py file.")
-        else:
-            logging.info(f"'{filepath}' is a .py file.")
-            sys.exit(1)
+            print(f"""\n----------------------------------------------------------------------------------
+Checking file: {filepath}
+----------------------------------------------------------------------------------""")
 
-        print()
-
-        with open(filepath, "r", encoding="utf-8") as file:
-
-            # initialize the class with filepath
-            pyfile_to_check: PEPChecker = PEPChecker(filepath)
-
-            # read the content of the python file
-            pyfile_src_code: str = file.read()
-
-            # beginn file chekcing
-            print(f"Checking file '{filepath}'")
-
-            if pyfile_to_check.has_shebang_line(pyfile_src_code):
-                print(" "*4 + "Shebang line - TRUE")
+            # check if the filepath is valid and the file exists
+            if os.path.isfile(filepath):
+                print(f"'{filepath}' exists as a file.")
             else:
-                print(" "*4 + "Shebang line - FALSE")
+                print(f"'{filepath}' does not exist as a file.")
+                sys.exit(1)
+            
+            # check if file is a .py script
+            if filepath.endswith(".py"):
+                print(f"'{filepath}' is a .py file.")
+            else:
+                print(f"'{filepath}' is a .py file.")
+                sys.exit(1)
 
-            # Create an instance of the class
-            # my_instance = MyClass()
+            with open(filepath, "r", encoding="utf-8") as file:
 
-            # Get all methods defined within the class
-            methods = [method for method_name, method in inspect.getmembers(pyfile_to_check, predicate=inspect.ismethod)]
+                # initialize the class with filepath
+                pyfile_to_check: PEPChecker = PEPChecker(filepath)
 
-            # Call the methods one after another with an argument
-            arg_value = "example_argument"
-            for method in methods:
-                if "has_encoding_declaration" in method.__name__:
-                    encodings = ["utf-8","utf-16","utf-32","ascii","iso-8859-1","cp1252","cp437","euc-jp","shift-jis"]
-                    for encoding in encodings:
-                        if method(encoding, pyfile_src_code):
-                            print(" "*4 + "Encoding - TRUE")
-                            break
-                        else:
-                            print(" "*4 + "Encoding - FALSE")
+                # read the content of the python file
+                pyfile_src_code: str = file.read()
 
-                elif "has_function_docstring" in method.__name__ or "has_function_docstring" in method.__name__ or "check_return_type_hints" in method.__name__:
-                    tree = ast.parse(pyfile_src_code)
-                    for node in ast.walk(tree):
-                        if isinstance(node, ast.FunctionDef) or isinstance(node, ast.AsyncFunctionDef):
-                            method(node)
-                            method(node)
-                else:
-                    method(pyfile_src_code)
+                print("Starting analyzation...")
+
+                # get all methods within class
+                methods = [method for method_name, method in inspect.getmembers(pyfile_to_check, predicate=inspect.ismethod)]
+
+                # call methods one after another
+                for method in methods:
+                    if "has_encoding_declaration" in method.__name__:
+                        encodings = ["utf-8","utf-16","utf-32","ascii","iso-8859-1","cp1252","cp437","euc-jp","shift-jis"]
+                        for encoding in encodings:
+                            if not method(encoding, pyfile_src_code):
+                                break
+
+                    elif "has_function_docstring" in method.__name__ or "has_function_docstring" in method.__name__ or "check_return_type_hints" in method.__name__ or "check_args_type_hints" in method.__name__ or "check_var_type_hints" in method.__name__:
+                        tree = ast.parse(pyfile_src_code)
+                        for node in ast.walk(tree):
+                            if isinstance(node, ast.FunctionDef) or isinstance(node, ast.AsyncFunctionDef):
+                                    method(node) 
+                    else:
+                        method(pyfile_src_code)
+
+            sys.stdout = original_stdout
 
 if __name__ == "__main__":
     main(*sys.argv[1:])

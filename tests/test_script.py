@@ -1,7 +1,6 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-"""A simple script to calculate Fibonacci numbers."""
+"""A simple script to calculate Fibonacci numbers. After the number is calculated, ti is going to be returned as a number"""
 
 import math
 
@@ -13,7 +12,7 @@ def fibonacci(n):
     elif n == 1:
         return 1
     else:
-        return fibonacci(n - 1) + fibonacci(n - 2)
+      return fibonacci(n - 1) + fibonacci(n - 2)
 
 # Class to represent a geometric shape
 class Shape:

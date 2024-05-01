@@ -25,24 +25,83 @@ This tool is a Python script designed to help maintain code quality and adherenc
 
 ### Prerequisites and example usage
 
-1. Install requirements:
+0. Clone the repository:
 
-```bash
+```
+git clone https://github.com/CH6832/python-pep8-syle-checker.git
+```
+
+1. Extract the repository:
+
+```
+tar -xf python-pep8-syle-checker.zip
+```
+
+2. Navigate into root directory:
+
+```
+cd python-pep8-syle-checker
+```
+
+3. Install requirements:
+
+```
 pip3 install -r requirements.txt
 ```
 
-2. Run script to see how it works:
+4. Run script to see how it works:
 
-```bash
+```
 python main.py "tests\\download_raw_bb.py" "tests\\test_script.py"
+```
+
+5. Output can be found in `logs\` folder. Here an example output:
+
+```
+----------------------------------------------------------------------------------
+Checking file: tests\test_script.py
+----------------------------------------------------------------------------------
+'tests\test_script.py' exists as a file.
+'tests\test_script.py' is a .py file.
+Starting analyzation...
+    Checking type hints for args...
+        Argument 'n' in function 'fibonacci' is missing type hint.
+    Checking type hints for args...
+        Argument 'self' in function '__init__' is missing type hint.
+        Argument 'name' in function '__init__' is missing type hint.
+    Checking type hints for args...
+        Argument 'self' in function 'area' is missing type hint.
+    Checking indentation...
+        Incorrect indentation at line 15: 6 spaces instead of a multiple of 4.
+    Checking lines...
+        Line 3 is longer than 79 characters.
+    Checking naming conventions...
+    Checking return type hints...
+    Checking variables type hints in function body...
+    Checking variables type hints in function body...
+    Checking variables type hints in function body...
+    Checking for whitespace around assignment...
+    Checking for single whitespace in front of bracket...
+    Checking for encoding...
+    Checking function docstrings...
+    Checking function docstrings...
+    Checking function docstrings...
+        Function 'area' is missing a docstring.
+    Checking the imports...
+        The file does not contain import statements.
+    Checking main block...
+        'if __name__ == "__main__":' block in the script.
+    Checking if module contains docstring...
+        The module is missing a docstring.
+    Checking for Shebang line...
 ```
 
 ## :books: Resources used to create this project
 
 * Python
-  * [Python 3.12.3 documentation](https://docs.python.org/3.12/)
-  * [Built-in Functions](https://docs.python.org/3.12/library/functions.html)
-  * [Python Module Index](https://docs.python.org/3.12/py-modindex.html)
+  * [Python 3.12 documentation](https://docs.python.org/3/)
+  * [Built-in Functions](https://docs.python.org/3/library/functions.html)
+  * [Python Module Index](https://docs.python.org/3/py-modindex.html)
   * [Logging HOWTO](https://docs.python.org/3/howto/logging.html)
   * [ast — Abstract Syntax Trees](https://docs.python.org/3/library/ast.html)
   * [unittest — Unit testing framework](https://docs.python.org/3/library/unittest.html)
