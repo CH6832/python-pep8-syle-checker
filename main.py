@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
 """main.py
 
 Driving code to check the python scripts.
 """
 
-
 # https://docs.pylint.org/
 # pylint: disable=line-too-long, trailing-whitespace, multiple-statements, fixme, locally-disabled
-
 
 import ast
 import logging
@@ -18,7 +15,6 @@ import sys
 import inspect
 import os
 from PEPChecker import PEPChecker
-
 
 def main(*args):
     """main program"""

@@ -1,4 +1,4 @@
-# Python PEP8 Style Checker Code of Conduct
+# Python PEP Style Checker Code of Conduct
 
 As contributor and maintainer of this project, I am committed to creating a friendly and respectful environment for everyone. This code of conduct outlines my expectations for all those who participate in the community, as well as the consequences for unacceptable behavior.
 

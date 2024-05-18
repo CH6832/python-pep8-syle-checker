@@ -29,31 +29,25 @@ This tool is a Python script designed to help maintain code quality and adherenc
 
 0. Clone the repository:
 
-```
+```sh
 git clone https://github.com/CH6832/python-pep8-syle-checker.git
 ```
 
-1. Extract the repository:
+1. Navigate into root directory:
 
-```
-tar -xf python-pep8-syle-checker.zip
-```
-
-2. Navigate into root directory:
-
-```
+```sh
 cd python-pep8-syle-checker
 ```
 
 3. Install requirements:
 
-```
+```sh
 pip3 install -r requirements.txt
 ```
 
 4. Run script to see how it works:
 
-```
+```sh
 python main.py "tests\\test_script.py"
 ```
 

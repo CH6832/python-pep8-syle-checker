@@ -1,7 +1,20 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""TestPEPChecker.py
+
+Unittest for the PEPChecker class.
+"""
+
+import os
+import sys
 import unittest
-from ..PEPChecker import PEPChecker
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(project_root)
+from classes.PEPChecker import PEPChecker
 
 class TestPEPChecker(unittest.TestCase):
+
     def setUp(self):
         self.checker = PEPChecker("test_script.py")
 
