@@ -9,7 +9,6 @@ This tool is a Python script designed to help maintain code quality and adherenc
     .
     ├── logs/ - implementation and test case of linked list
     ├── tests/ - implementation and test case of stack
-    ├── CODE_OF_CONDUCT.md - project code of conduct
     ├── COPYRIGHT - project copyright
     ├── LICENSE - license file
     ├── example_usages.py - main program contains example usages
