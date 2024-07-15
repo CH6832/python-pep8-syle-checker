@@ -7,13 +7,15 @@ This tool is a Python script designed to help maintain code quality and adherenc
 ### Content overview
 
     .
-    ├── logs/ - implementation and test case of linked list
-    ├── tests/ - implementation and test case of stack
+    ├── classes/ - main class of the program
+    ├── logs/ - log files created by the progam
+    ├── tests/ - test cases
+    ├── .gitignore - files, folders, ignored by git
     ├── COPYRIGHT - project copyright
     ├── LICENSE - license file
-    ├── example_usages.py - main program contains example usages
-    ├── PEPChecker.py - main program contains example usages
     ├── README.md - project descriptions and instructions
+    ├── __init__.py - directory marker file
+    ├── main.py - driving code
     └── requirements.txt - project requirements
 
 ## :notebook: Features
