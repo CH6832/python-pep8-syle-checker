@@ -1,4 +1,4 @@
-# PEP Checker
+# PEP 8 Style Checker for Python Code
 
 ## :newspaper: About the project
 
