@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
 """PEPChecker.py
 
 The files contains the PEP8Checker class and relevant functions to check
@@ -9,19 +8,15 @@ if a script is styled according to the 'Python Enhancement Proposal 8 - Style Gu
 The style guide can be found in https://peps.python.org/pep-0008/.
 """
 
-
 # https://docs.pylint.org/
 # pylint: disable=line-too-long, trailing-whitespace, multiple-statements, fixme, locally-disabled
-
 
 import ast
 import re
 from typing import List
 
-
 class PEPChecker:
     """A class to check if a Python script adheres to PEP style guidelines."""
-
 
     def __init__(self, filepath_to_py_script: str) -> None:
         """Initialize the PEPChecker class.
@@ -31,7 +26,6 @@ class PEPChecker:
         """
         self.filepath_to_py_script = filepath_to_py_script
         return None
-
 
     def has_shebang_line(self, source_code: str) -> bool:
         """    Check if the script starts with a shebang line.
@@ -44,7 +38,6 @@ class PEPChecker:
         if not lines[0].startswith("#!"):
             print(f"        The script is missing a shebang line.")
             # print(f"    The script starts with a shebang line.")
-
 
     def has_encoding_declaration(self, encoding: str, source_code: str) -> bool:
         """Check if the script contains relevant encoding.
@@ -68,8 +61,6 @@ class PEPChecker:
         lines = source_code.split("\n")
         if encoding in lines[1]:
             print(f"        The script has encoding declaration for '{encoding}'.")
-        
-            
 
     def has_module_docstring(self, source_code: str) -> bool:
         """Check if module contains a docstring.
@@ -87,7 +78,6 @@ class PEPChecker:
                 continue
         print("        The module is missing a docstring.")
 
-
     def has_imports(self, source_code: str):
         """Check if a Python file contains import statements.
 
@@ -103,7 +93,6 @@ class PEPChecker:
                 continue
         print("        The file does not contain import statements.")
 
-
     def has_function_docstring(self, node) -> None:
         """Check if a node has a docstring."""
         print("    Checking function docstrings...")
@@ -112,7 +101,6 @@ class PEPChecker:
                 print(f"        Function '{node.name}' is missing a docstring.")
         return None
 
-
     def check_args_type_hints(self, node):
         """Check if all variables and arguments in a node are type hinted."""
         # Check arguments
@@ -120,7 +108,6 @@ class PEPChecker:
         for arg in node.args.args:
             if not arg.annotation:
                 print(f"        Argument '{arg.arg}' in function '{node.name}' is missing type hint.")
-
 
     def check_var_type_hints(self, node):
         # Check variables in function body
@@ -131,13 +118,11 @@ class PEPChecker:
                     if isinstance(target, ast.Name): # and not target.annotation:
                         print(f"         Variable '{target.id}' in function '{node.name}' is missing type hint.")
 
-
     def check_return_type_hint(self, node):
         # Check return type hint
         print("    Checking return type hints...")
         if hasattr(node, 'returns') and not node.returns:
             print(f"        Function '{node.name}' is missing return type hint.")
-
 
     def check_names(self, source_code):
         """Check if all function, variable names, and class names follow the correct style."""
@@ -166,7 +151,6 @@ class PEPChecker:
                     continue
                     # print(f"    Class name '{node.name}' follow the camel case style.")
 
-
     def check_line_length(self, source_code):
         """Check if every single line is not longer than 79 characters."""
         print("    Checking lines...")
@@ -176,7 +160,6 @@ class PEPChecker:
                 continue
             else:
                 print(f"        Line {i+1} is longer than 79 characters.")
-
 
     def check_whitespace_before_parentheses(self, source_code):
         """Check if there are no additional whitespaces before an opening parenthesis."""
@@ -188,7 +171,6 @@ class PEPChecker:
             else:
                 continue
                 # print(f"    No whitespace before opening parenthesis on line {i+1}")
-
 
     def check_whitespace_around_assignment(self, source_code):
         """Check if there is only a single whitespace before and after a '=' symbol,
@@ -228,7 +210,6 @@ class PEPChecker:
                                         print(f"        No additional whitespace around '=' symbol for default value of parameter '{arg.arg}' on line {line_num}")
                                     break
 
-
     def has_main_block(self, source_code) -> None:
         """Check if the script contains if __name__ == "__main__": block."""
         print("    Checking main block...")
@@ -250,7 +231,6 @@ class PEPChecker:
             print("        Missing 'if __name__ == \"__main__\":' block in the script.")
         else:
             print("        'if __name__ == \"__main__\":' block in the script.")
-
 
     def check_indentation_style(self, source_code):
         """Check if indentation follows the style of 4 whitespaces per indentation level."""

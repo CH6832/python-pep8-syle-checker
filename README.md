@@ -93,6 +93,13 @@ Starting analyzation...
     Checking for Shebang line...
 ```
 
+### Run the test file
+
+0. Navigate to the `tests` folder and run the following command:
+```sh
+pytest -q TestEPChecker.py
+```
+
 ## :books: Resources used to create this project
 
 * Python

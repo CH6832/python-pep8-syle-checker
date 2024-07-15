@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
-"""A simple script to calculate Fibonacci numbers. After the number is calculated, ti is going to be returned as a number"""
+"""A simple script to calculate Fibonacci numbers. After
+the number is calculated, ti is going to be returned as a number
+"""
 
 import math
 
-# Function to calculate Fibonacci numbers
 def fibonacci(n):
     """Calculate the nth Fibonacci number."""
     if n <= 0:
@@ -14,7 +15,6 @@ def fibonacci(n):
     else:
       return fibonacci(n - 1) + fibonacci(n - 2)
 
-# Class to represent a geometric shape
 class Shape:
     """A class to represent a geometric shape."""
 
@@ -23,10 +23,9 @@ class Shape:
         self.name = name
 
     def area(self):
-        pass  # Placeholder implementation
+        pass
 
 if __name__ == "__main__":
-    # Test Fibonacci function
     print("Fibonacci sequence:")
     for i in range(10):
         print(fibonacci(i))
