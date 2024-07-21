@@ -4,8 +4,6 @@
 the number is calculated, ti is going to be returned as a number
 """
 
-import math
-
 def fibonacci(n):
     """Calculate the nth Fibonacci number."""
     if n <= 0:
@@ -30,6 +28,6 @@ if __name__ == "__main__":
     for i in range(10):
         print(fibonacci(i))
 
-    # Create a Shape object
+    # create a shape object
     shape = Shape("Square")
     print("Name of the shape:", shape.name)
