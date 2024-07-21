@@ -15,7 +15,7 @@ This tool is a Python script designed to help maintain code quality and adherenc
     ├── LICENSE - license file
     ├── README.md - project descriptions and instructions
     ├── __init__.py - directory marker file
-    ├── main.py - driving code
+    ├── style_checker.py - driving code
     └── requirements.txt - project requirements
 
 ## :notebook: Features
