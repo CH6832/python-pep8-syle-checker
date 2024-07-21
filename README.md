@@ -7,6 +7,7 @@ This tool is a Python script designed to help maintain code quality and adherenc
 ### Content overview
 
     .
+    ├── _vscode/ - vscode settings (rename to .vscode for debugging)
     ├── classes/ - main class of the program
     ├── logs/ - log files created by the progam
     ├── tests/ - test cases
