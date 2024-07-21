@@ -13,7 +13,6 @@ The style guide can be found in https://peps.python.org/pep-0008/.
 
 import ast
 import re
-from typing import List
 
 class PEPChecker:
     """A class to check if a Python script adheres to PEP style guidelines."""
@@ -25,9 +24,10 @@ class PEPChecker:
         filepath_to_py_script -- Path to pythonscript that should be checked.
         """
         self.filepath_to_py_script = filepath_to_py_script
+        
         return None
 
-    def has_shebang_line(self, source_code: str) -> bool:
+    def has_shebang_line(self, source_code: str) -> None:
         """    Check if the script starts with a shebang line.
         
         Keyword arguments:
@@ -36,10 +36,11 @@ class PEPChecker:
         print("    Checking for Shebang line...")
         lines = source_code.split("\n")
         if not lines[0].startswith("#!"):
-            print(f"        The script is missing a shebang line.")
-            # print(f"    The script starts with a shebang line.")
+            print("        The script is missing a shebang line.")
 
-    def has_encoding_declaration(self, encoding: str, source_code: str) -> bool:
+        return None
+
+    def has_encoding_declaration(self, encoding: str, source_code: str) -> None:
         """Check if the script contains relevant encoding.
         
         Keyword arguments:
@@ -62,7 +63,9 @@ class PEPChecker:
         if encoding in lines[1]:
             print(f"        The script has encoding declaration for '{encoding}'.")
 
-    def has_module_docstring(self, source_code: str) -> bool:
+        return None
+
+    def has_module_docstring(self, source_code: str) -> None:
         """Check if module contains a docstring.
         
         Keyword arguments:
@@ -78,7 +81,9 @@ class PEPChecker:
                 continue
         print("        The module is missing a docstring.")
 
-    def has_imports(self, source_code: str):
+        return None
+
+    def has_imports(self, source_code: str) -> None:
         """Check if a Python file contains import statements.
 
         Keyword arguments:
@@ -93,15 +98,18 @@ class PEPChecker:
                 continue
         print("        The file does not contain import statements.")
 
+        return None
+
     def has_function_docstring(self, node) -> None:
         """Check if a node has a docstring."""
         print("    Checking function docstrings...")
         if isinstance(node, ast.FunctionDef) or isinstance(node, ast.AsyncFunctionDef):
             if not (node.body and isinstance(node.body[0], ast.Expr) and isinstance(node.body[0].value, ast.Str)):
                 print(f"        Function '{node.name}' is missing a docstring.")
+        
         return None
 
-    def check_args_type_hints(self, node):
+    def check_args_type_hints(self, node) -> None:
         """Check if all variables and arguments in a node are type hinted."""
         # Check arguments
         print("    Checking type hints for args...")
@@ -109,8 +117,11 @@ class PEPChecker:
             if not arg.annotation:
                 print(f"        Argument '{arg.arg}' in function '{node.name}' is missing type hint.")
 
-    def check_var_type_hints(self, node):
-        # Check variables in function body
+        return None
+
+
+    def check_var_type_hints(self, node) -> None:
+        """Check variables in function body."""
         print("    Checking variables type hints in function body...")
         for var in node.body:
             if isinstance(var, ast.Assign):
@@ -118,13 +129,17 @@ class PEPChecker:
                     if isinstance(target, ast.Name): # and not target.annotation:
                         print(f"         Variable '{target.id}' in function '{node.name}' is missing type hint.")
 
+        return None
+
     def check_return_type_hint(self, node):
-        # Check return type hint
+        """Check return type hint."""
         print("    Checking return type hints...")
         if hasattr(node, 'returns') and not node.returns:
             print(f"        Function '{node.name}' is missing return type hint.")
 
-    def check_names(self, source_code):
+        return None
+
+    def check_names(self, source_code) -> None:
         """Check if all function, variable names, and class names follow the correct style."""
         print("    Checking naming conventions...")
         tree = ast.parse(source_code)
@@ -134,7 +149,7 @@ class PEPChecker:
                     print(f"        Function name '{node.name}' does not follow the style 'function_name'.")
                 else:
                     continue
-                    # print(f"    Function name '{node.name}' does follow the style 'function_name'.")
+
             elif isinstance(node, ast.Assign):
                 for target in node.targets:
                     if isinstance(target, ast.Name):
@@ -142,16 +157,16 @@ class PEPChecker:
                             print(f"        Variable name '{target.id}' does not follow the style 'variable_name'.")
                         else:
                             continue
-                            # print(f"    Variable name '{target.id}' does follow the style 'variable_name'.")
 
             elif isinstance(node, ast.ClassDef):
                 if not re.match(r'^[A-Z][a-zA-Z0-9]*$', node.name):
                     print(f"        Class name '{node.name}' does not follow the camel case style.")
                 else:
                     continue
-                    # print(f"    Class name '{node.name}' follow the camel case style.")
 
-    def check_line_length(self, source_code):
+        return None
+
+    def check_line_length(self, source_code) -> None:
         """Check if every single line is not longer than 79 characters."""
         print("    Checking lines...")
         lines = source_code.split("\n")
@@ -161,7 +176,9 @@ class PEPChecker:
             else:
                 print(f"        Line {i+1} is longer than 79 characters.")
 
-    def check_whitespace_before_parentheses(self, source_code):
+        return None
+
+    def check_whitespace_before_parentheses(self, source_code) -> None:
         """Check if there are no additional whitespaces before an opening parenthesis."""
         print("    Checking for single whitespace in front of bracket...")
         lines = source_code.split("\n")
@@ -172,7 +189,9 @@ class PEPChecker:
                 continue
                 # print(f"    No whitespace before opening parenthesis on line {i+1}")
 
-    def check_whitespace_around_assignment(self, source_code):
+        return None
+
+    def check_whitespace_around_assignment(self, source_code) -> None:
         """Check if there is only a single whitespace before and after a '=' symbol,
         except for keyword arguments and default values for unannotated function parameters."""
         print("    Checking for whitespace around assignment...")
@@ -210,6 +229,8 @@ class PEPChecker:
                                         print(f"        No additional whitespace around '=' symbol for default value of parameter '{arg.arg}' on line {line_num}")
                                     break
 
+        return None
+
     def has_main_block(self, source_code) -> None:
         """Check if the script contains if __name__ == "__main__": block."""
         print("    Checking main block...")
@@ -232,7 +253,9 @@ class PEPChecker:
         else:
             print("        'if __name__ == \"__main__\":' block in the script.")
 
-    def check_indentation_style(self, source_code):
+        return None
+
+    def check_indentation_style(self, source_code) -> None:
         """Check if indentation follows the style of 4 whitespaces per indentation level."""
         print("    Checking indentation...")
         lines = source_code.split("\n")
@@ -242,3 +265,5 @@ class PEPChecker:
                 continue
             else:
                 print(f"        Incorrect indentation at line {i+1}: {num_spaces} spaces instead of a multiple of 4.")
+
+        return None
